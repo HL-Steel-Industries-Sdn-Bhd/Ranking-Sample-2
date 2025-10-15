@@ -1,189 +1,174 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3D 排行榜展示</title>
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(135deg, #FFEFEF, #E8FFF8);
-    font-family: 'Poppins', sans-serif;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    perspective: 2000px;
-    transition: background 2s ease;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Performance Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #FFE7E0, #E0F7FF);
+      font-family: "Poppins", sans-serif;
+      overflow: hidden;
+    }
 
-  .scene {
-    width: 900px;
-    height: 600px;
-    position: relative;
-    transform-style: preserve-3d;
-    transform: rotateX(15deg) rotateY(0deg);
-    transition: transform 1.5s ease;
-  }
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      height: 60px;
+    }
 
-  .card {
-    position: absolute;
-    width: 700px;
-    height: 420px;
-    left: 100px;
-    top: 90px;
-    border-radius: 20px;
-    backface-visibility: hidden;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-    transform-style: preserve-3d;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .carousel {
+      position: relative;
+      width: 80vw;
+      height: 70vh;
+      transform-style: preserve-3d;
+      perspective: 1500px;
+      transition: transform 1s ease-in-out;
+    }
 
-  .card-content {
-    width: 90%;
-    height: 85%;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 20px;
-    padding: 1rem;
-    text-align: center;
-    box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
-  }
+    .card {
+      position: absolute;
+      width: 70%;
+      height: 80%;
+      top: 10%;
+      left: 15%;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+      font-size: 1.2em;
+      backface-visibility: hidden;
+      transform-origin: center center -500px;
+      background: white;
+    }
 
-  h2 {
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
+    .card:nth-child(1) { background: #FFD8B1; transform: rotateY(0deg); }
+    .card:nth-child(2) { background: #B1E5FF; transform: rotateY(90deg); }
+    .card:nth-child(3) { background: #B1FFD1; transform: rotateY(180deg); }
+    .card:nth-child(4) { background: #FFF5B1; transform: rotateY(270deg); }
 
-  table {
-    width: 100%;
-    font-size: 1.2rem;
-    border-collapse: collapse;
-  }
+    h2 {
+      margin-bottom: 20px;
+      font-size: 1.8em;
+    }
 
-  th, td {
-    padding: 0.6rem;
-    border-bottom: 1px solid #e5e7eb;
-  }
+    table {
+      width: 80%;
+      border-collapse: collapse;
+      text-align: center;
+    }
 
-  th {
-    background-color: rgba(255,255,255,0.6);
-  }
+    th, td {
+      padding: 10px;
+    }
 
-  tr:nth-child(even) {
-    background-color: rgba(255,255,255,0.4);
-  }
+    th {
+      font-size: 1.2em;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    }
 
-  img.logo {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 140px;
-  }
+    td {
+      font-size: 1em;
+    }
 
-  @media(max-width: 800px){
-    .scene{ width: 100vw; height: 80vh; }
-    .card{ width: 90%; left: 5%; height: 350px; top: 100px;}
-    h2{ font-size: 1.4rem; }
-    table{ font-size: 1rem; }
-  }
-</style>
+    tr:nth-child(odd) {
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .card { width: 90%; left: 5%; font-size: 0.9em; }
+      table { width: 95%; }
+    }
+  </style>
 </head>
 <body>
-  <img class="logo" src="https://i.imgur.com/AbyTxH1.png" alt="Company Logo">
+  <img src="https://i.imgur.com/AbyTxH1.png" alt="Company Logo" class="logo">
 
-  <div class="scene" id="carousel">
-    <div class="card" style="background:#FFD8B1; transform: rotateY(0deg) translateZ(800px);">
-      <div class="card-content">
-        <h2>🏆 本月个人贡献排行</h2>
-        <table>
-          <tr><th>名次</th><th>姓名</th><th>分数</th></tr>
-          <tr><td>🥇 1</td><td>Albert</td><td>1320</td></tr>
-          <tr><td>🥈 2</td><td>Aung Thant</td><td>1180</td></tr>
-          <tr><td>🥉 3</td><td>Mei Ling</td><td>970</td></tr>
-          <tr><td>4</td><td>Jin Wei</td><td>920</td></tr>
-          <tr><td>5</td><td>Siti</td><td>870</td></tr>
-        </table>
-      </div>
+  <div class="carousel" id="carousel">
+    <div class="card">
+      <h2>个人贡献排行</h2>
+      <table>
+        <tr><th>名次</th><th>姓名</th><th>分数</th></tr>
+        <tr><td>🥇</td><td>Albert</td><td>98</td></tr>
+        <tr><td>🥈</td><td>Shin</td><td>92</td></tr>
+        <tr><td>🥉</td><td>Kai</td><td>89</td></tr>
+        <tr><td>4</td><td>Ming</td><td>86</td></tr>
+        <tr><td>5</td><td>Wei</td><td>84</td></tr>
+      </table>
     </div>
 
-    <div class="card" style="background:#FFDAC1; transform: rotateY(90deg) translateZ(800px);">
-      <div class="card-content">
-        <h2>🌍 年度团队贡献排行</h2>
-        <table>
-          <tr><th>名次</th><th>团队</th><th>分数</th></tr>
-          <tr><td>🥇 1</td><td>Production</td><td>8200</td></tr>
-          <tr><td>🥈 2</td><td>QA</td><td>7900</td></tr>
-          <tr><td>🥉 3</td><td>Purchasing</td><td>7100</td></tr>
-          <tr><td>4</td><td>Engineering</td><td>6900</td></tr>
-          <tr><td>5</td><td>HR</td><td>6400</td></tr>
-        </table>
-      </div>
+    <div class="card">
+      <h2>团队表现排行</h2>
+      <table>
+        <tr><th>名次</th><th>团队</th><th>分数</th></tr>
+        <tr><td>🥇</td><td>Alpha</td><td>97</td></tr>
+        <tr><td>🥈</td><td>Bravo</td><td>94</td></tr>
+        <tr><td>🥉</td><td>Charlie</td><td>90</td></tr>
+        <tr><td>4</td><td>Delta</td><td>87</td></tr>
+        <tr><td>5</td><td>Echo</td><td>83</td></tr>
+      </table>
     </div>
 
-    <div class="card" style="background:#C1FFD7; transform: rotateY(180deg) translateZ(800px);">
-      <div class="card-content">
-        <h2>⚙️ 综合效率排行</h2>
-        <table>
-          <tr><th>名次</th><th>姓名</th><th>效率</th></tr>
-          <tr><td>1</td><td>Albert</td><td>93%</td></tr>
-          <tr><td>2</td><td>Aung Thant</td><td>88%</td></tr>
-          <tr><td>3</td><td>Mei Ling</td><td>81%</td></tr>
-          <tr><td>4</td><td>Jin Wei</td><td>79%</td></tr>
-          <tr><td>5</td><td>Siti</td><td>76%</td></tr>
-        </table>
-      </div>
+    <div class="card">
+      <h2>效率排行</h2>
+      <table>
+        <tr><th>名次</th><th>部门</th><th>得分</th></tr>
+        <tr><td>🥇</td><td>Production</td><td>95</td></tr>
+        <tr><td>🥈</td><td>Logistics</td><td>92</td></tr>
+        <tr><td>🥉</td><td>QA</td><td>90</td></tr>
+        <tr><td>4</td><td>R&D</td><td>88</td></tr>
+        <tr><td>5</td><td>Admin</td><td>85</td></tr>
+      </table>
     </div>
 
-    <div class="card" style="background:#C1E1FF; transform: rotateY(270deg) translateZ(800px);">
-      <div class="card-content">
-        <h2>💖 部门士气排行榜</h2>
-        <table>
-          <tr><th>名次</th><th>部门</th><th>满意度</th></tr>
-          <tr><td>🥇 1</td><td>QA</td><td>98%</td></tr>
-          <tr><td>🥈 2</td><td>Production</td><td>94%</td></tr>
-          <tr><td>🥉 3</td><td>Engineering</td><td>91%</td></tr>
-          <tr><td>4</td><td>Admin</td><td>89%</td></tr>
-          <tr><td>5</td><td>HR</td><td>87%</td></tr>
-        </table>
-      </div>
+    <div class="card">
+      <h2>士气排行</h2>
+      <table>
+        <tr><th>名次</th><th>团队</th><th>分数</th></tr>
+        <tr><td>🥇</td><td>Team B</td><td>99</td></tr>
+        <tr><td>🥈</td><td>Team A</td><td>95</td></tr>
+        <tr><td>🥉</td><td>Team D</td><td>92</td></tr>
+        <tr><td>4</td><td>Team C</td><td>88</td></tr>
+        <tr><td>5</td><td>Team E</td><td>85</td></tr>
+      </table>
     </div>
   </div>
 
-<script>
-let angle = 0;
-let carousel = document.getElementById('carousel');
-let colors = [
-  "linear-gradient(135deg, #FFF8E7, #E3F2FD)",
-  "linear-gradient(135deg, #E8FFF8, #FFF5E1)",
-  "linear-gradient(135deg, #FFF0F5, #E3FFF7)",
-  "linear-gradient(135deg, #F0FFF3, #E8E8FF)"
-];
-let index = 0;
+  <script>
+    let angle = 0;
+    const carousel = document.getElementById("carousel");
+    const total = 4;
+    let autoRotate = setInterval(next, 4000);
 
-function rotateCarousel() {
-  angle -= 90;
-  carousel.style.transform = `rotateX(15deg) rotateY(${angle}deg)`;
-  document.body.style.background = colors[index % colors.length];
-  index++;
-}
-let auto = setInterval(rotateCarousel, 4000);
+    function next() {
+      angle -= 90;
+      carousel.style.transform = `rotateY(${angle}deg)`;
+    }
 
-let startX = 0;
-document.body.addEventListener("touchstart", e => startX = e.touches[0].clientX);
-document.body.addEventListener("touchend", e => {
-  let diff = e.changedTouches[0].clientX - startX;
-  if (diff > 50) { angle += 90; }
-  if (diff < -50) { angle -= 90; }
-  carousel.style.transform = `rotateX(15deg) rotateY(${angle}deg)`;
-  clearInterval(auto);
-  auto = setInterval(rotateCarousel, 4000);
-});
-</script>
+    let startX = 0;
+    document.body.addEventListener("touchstart", e => startX = e.touches[0].clientX);
+    document.body.addEventListener("touchend", e => {
+      const endX = e.changedTouches[0].clientX;
+      if (startX - endX > 50) next();
+      else if (endX - startX > 50) {
+        angle += 90;
+        carousel.style.transform = `rotateY(${angle}deg)`;
+      }
+      clearInterval(autoRotate);
+      autoRotate = setInterval(next, 4000);
+    });
+  </script>
 </body>
 </html>
+
+
