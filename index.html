@@ -24,7 +24,7 @@
     height: 600px;
     position: relative;
     transform-style: preserve-3d;
-    transform: rotateX(15deg) rotateY(0deg);
+    transform: rotateX(0deg) rotateY(0deg); /* ✅ 改成正视角 */
     transition: transform 1.5s ease;
   }
 
@@ -168,7 +168,7 @@ let index = 0;
 
 function rotateCarousel() {
   angle -= 90;
-  carousel.style.transform = `rotateX(15deg) rotateY(${angle}deg)`;
+  carousel.style.transform = `rotateX(0deg) rotateY(${angle}deg)`; // ✅ 改成正视角旋转
   document.body.style.background = colors[index % colors.length];
   index++;
 }
@@ -180,12 +180,13 @@ document.body.addEventListener("touchend", e => {
   let diff = e.changedTouches[0].clientX - startX;
   if (diff > 50) { angle += 90; }
   if (diff < -50) { angle -= 90; }
-  carousel.style.transform = `rotateX(15deg) rotateY(${angle}deg)`;
+  carousel.style.transform = `rotateX(0deg) rotateY(${angle}deg)`; // ✅ 同步修正
   clearInterval(auto);
   auto = setInterval(rotateCarousel, 4000);
 });
 </script>
 </body>
 </html>
+
 
 
